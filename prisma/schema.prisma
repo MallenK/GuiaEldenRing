@@ -40,16 +40,57 @@ model Weapon {
   @@map("catalog_weapons")
 }
 
+model Armor {
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  name       String
+  slot       String
+  weight     Float
+  poise      Float
+  imageUrl   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("catalog_armor")
+}
+
+model Talisman {
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  name       String
+  effect     String
+  weight     Float
+  imageUrl   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("catalog_talismans")
+}
+
+model Location {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  region      String
+  description String?
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("catalog_locations")
+}
+
 // ---------------------------------------------------------------------------
 // progress module — user accounts and generated state, owned by
 // src/modules/progress/data
 // ---------------------------------------------------------------------------
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  createdAt    DateTime @default(now())
 
   builds     Build[]
   checklists ChecklistItem[]

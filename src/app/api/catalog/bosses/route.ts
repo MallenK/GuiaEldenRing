@@ -1,10 +1,10 @@
 import type { NextRequest } from "next/server";
-import { getBosses, listBossesQuerySchema } from "@/modules/catalog";
+import { getBosses, listQuerySchema } from "@/modules/catalog";
 import { withApiHandler } from "@/shared/api/withApiHandler";
 import { err } from "@/shared/result";
 
 export const GET = withApiHandler(async (request: NextRequest) => {
-  const parsed = listBossesQuerySchema.safeParse({
+  const parsed = listQuerySchema.safeParse({
     q: request.nextUrl.searchParams.get("q") ?? undefined,
   });
 

@@ -1,9 +1,10 @@
 import type { DomainError } from "@/shared/api/withApiHandler";
+import type { CatalogEntryType } from "../../types/catalog.dto";
 
-export function bossNotFound(slug: string): DomainError {
+export function catalogEntryNotFound(type: CatalogEntryType, slug: string): DomainError {
   return {
-    code: "BOSS_NOT_FOUND",
-    message: `No boss found with slug "${slug}"`,
+    code: "CATALOG_ENTRY_NOT_FOUND",
+    message: `No ${type} found with slug "${slug}"`,
     status: 404,
   };
 }

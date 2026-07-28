@@ -1,7 +1,10 @@
 "use client";
 
 import { use } from "react";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { useBoss } from "@/modules/catalog/hooks/useBoss";
+import { ChecklistToggle } from "@/modules/progress/ui/ChecklistToggle";
 
 export default function BossDetailPage({
   params,
@@ -10,6 +13,7 @@ export default function BossDetailPage({
 }) {
   const { slug } = use(params);
   const { data: boss, isLoading, isError } = useBoss(slug);
+  const { status } = useSession();
 
   if (isLoading) return <main className="mx-auto max-w-3xl p-8">Cargando...</main>;
   if (isError || !boss) {
@@ -30,6 +34,19 @@ export default function BossDetailPage({
           <dd className="text-lg">{boss.runes.toLocaleString()}</dd>
         </div>
       </dl>
+
+      <div className="mt-6">
+        {status === "authenticated" ? (
+          <ChecklistToggle refType="boss" refId={boss.slug} label="Marcar como derrotado" />
+        ) : (
+          <p className="text-sm text-neutral-500">
+            <Link href="/login" className="underline">
+              Inicia sesión
+            </Link>{" "}
+            para llevar el registro de tu progreso.
+          </p>
+        )}
+      </div>
     </main>
   );
 }
