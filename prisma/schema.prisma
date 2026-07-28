@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// catalog module — reference/lookup content, owned by src/modules/catalog/data
+// ---------------------------------------------------------------------------
+
+model Boss {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  region    String
+  health    Int
+  runes     Int
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("catalog_bosses")
+}
+
+model Weapon {
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  name       String
+  category   String
+  weight     Float
+  requiredStr Int
+  requiredDex Int
+  imageUrl   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("catalog_weapons")
+}
+
+// ---------------------------------------------------------------------------
+// progress module — user accounts and generated state, owned by
+// src/modules/progress/data
+// ---------------------------------------------------------------------------
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+
+  builds     Build[]
+  checklists ChecklistItem[]
+
+  @@map("progress_users")
+}
+
+model Build {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  stats     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("progress_builds")
+}
+
+model ChecklistItem {
+  id          String   @id @default(cuid())
+  userId      String
+  refType     String
+  refId       String
+  completed   Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, refType, refId])
+  @@map("progress_checklist_items")
+}
